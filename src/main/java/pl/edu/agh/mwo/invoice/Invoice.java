@@ -9,35 +9,49 @@ import java.util.Map;
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
-//    private Collection<Product> products = new ArrayList<>();
+
 
     private Map<Product, Integer> products = new HashMap<>();
 
     public void addProduct(Product product){
+
+
         this.addProduct(product, 1);
     }
 
     public void addProduct(Product product, Integer quantity) {
+        if(quantity <= 0){
+            throw new IllegalArgumentException("Product name cannot be 0 or empty");
+        }
         this.products.put(product, quantity);
     }
 
-    public BigDecimal getSubtotal() {
+    public BigDecimal getNetTotal() {
         BigDecimal sum = BigDecimal.ZERO;
         for(Product product : this.products.keySet()){
             Integer quantity = this.products.get(product);
             BigDecimal quantityAsBigDecimal = BigDecimal.valueOf(quantity);
-
-            sum = sum.add(product.getPrice().multiply(quantityAsBigDecimal);
+            sum = sum.add(product.getPrice().multiply(quantityAsBigDecimal));
         }
         return sum;
 
     }
 
     public BigDecimal getTax() {
-        return BigDecimal.ZERO;
+
+        BigDecimal sum = BigDecimal.ZERO;
+        for(Product product : this.products.keySet()) {
+            Integer quantity = this.products.get(product);
+            if (quantity > 0) {
+                BigDecimal quantityAsBigDecimal = BigDecimal.valueOf(quantity);
+                sum = sum.add(product.getPrice().multiply(quantityAsBigDecimal).multiply(product.getTaxPercent()));
+            }
+        }
+
+        return sum;
     }
 
     public BigDecimal getTotal() {
-        return BigDecimal.ZERO;
+        return getNetTotal().add(getTax());
     }
 }
