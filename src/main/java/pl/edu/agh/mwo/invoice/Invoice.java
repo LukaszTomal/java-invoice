@@ -21,7 +21,7 @@ public class Invoice {
 
     public void addProduct(Product product, Integer quantity) {
         if(quantity <= 0){
-            throw new IllegalArgumentException("Product name cannot be 0 or empty");
+            throw new IllegalArgumentException("Quantity cannot be 0 or negative");
         }
         this.products.put(product, quantity);
     }
