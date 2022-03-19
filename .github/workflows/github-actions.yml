@@ -23,5 +23,5 @@ jobs:
        with:
          java-version: '15'
          distribution: 'adopt'
-       - name: Test
-         run: mvn checkstyle:check
+    - name: Test
+      run: mvn checkstyle:check
