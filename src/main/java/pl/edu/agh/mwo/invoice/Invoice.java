@@ -6,7 +6,18 @@ import java.util.Map;
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
+
     private Map<Product, Integer> products = new HashMap<Product, Integer>();
+    private int invoiceNumber = 0;
+    private static int nextNumber = 1;
+
+    public int getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public Invoice(){
+        this.invoiceNumber = nextNumber++;
+    }
 
     public void addProduct(Product product) {
         addProduct(product, 1);
@@ -39,5 +50,24 @@ public class Invoice {
             totalGross = totalGross.add(product.getPriceWithTax().multiply(quantity));
         }
         return totalGross;
+    }
+
+    public String getAsText(Invoice invoice) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("nr " + this.invoiceNumber);
+        for (Product product : invoice.products.keySet()){
+            stringBuilder.append("\n");
+            stringBuilder.append(product.getName());
+            stringBuilder.append(" szt. ");
+            stringBuilder.append(products.get(product).toString());
+            stringBuilder.append(", cena: ");
+            stringBuilder.append(product.getPrice());
+            stringBuilder.append(" PLN/szt.");
+
+        }
+        stringBuilder.append(("\nLiczba pozycji: "));
+        stringBuilder.append(this.products.size());
+
+        return stringBuilder.toString();
     }
 }

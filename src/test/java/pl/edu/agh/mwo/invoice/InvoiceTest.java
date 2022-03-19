@@ -125,4 +125,83 @@ public class InvoiceTest {
     public void testAddingNullProduct() {
         invoice.addProduct(null);
     }
+
+    @Test
+    public void testInvoiceHasNumber() {
+        int number = invoice.getInvoiceNumber();
+    }
+
+    @Test
+    public void testInvoiceHasNumberGraterThan0() {
+        int number = invoice.getInvoiceNumber();
+        Assert.assertThat(number, Matchers.greaterThan(0));
+    }
+
+    @Test
+    public void testTwoInvoicesHaveDifferentNumbers() {
+        int number1 = new Invoice().getInvoiceNumber();
+        int number2 = new Invoice().getInvoiceNumber();
+        Assert.assertNotEquals(number1, number2);
+    }
+
+    @Test
+    public void testInvoiceDoesNotChangeItsNumber() {
+        Assert.assertEquals(invoice.getInvoiceNumber(), invoice.getInvoiceNumber());
+    }
+
+    @Test
+    public void testTheFirstInvoiceNumberIsLowerThanSecond() {
+        int number1 = new Invoice().getInvoiceNumber();
+        int number2 = new Invoice().getInvoiceNumber();
+        Assert.assertThat(number1, Matchers.lessThan(number2));
+    }
+
+    @Test
+    public void testInvoiceHasConseqNumber() {
+        for (int i = 0; i < 10000; i ++) {
+            int number1 = new Invoice().getInvoiceNumber();
+            int number2 = new Invoice().getInvoiceNumber();
+            Assert.assertNotEquals(number1, Matchers.lessThan(number2));
+        }
+    }
+
+    @Test
+    public void testPrintInvoiceContainsNumber() {
+        String printedInvoice = invoice.getAsText(invoice);
+        String number = String.valueOf(invoice.getInvoiceNumber());
+        Assert.assertThat(printedInvoice, Matchers.containsString("nr " + number));
+    }
+
+    @Test
+    public void testPrintInvoiceContainsProductDetails() {
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal(5)),2);
+        String printedInvoice = invoice.getAsText(invoice);
+        Assert.assertThat(printedInvoice, Matchers.containsString("Chleb szt. 2, cena: 5 PLN/szt."));
+    }
+
+    @Test
+    public void testPrintInvoiceContainsManyProducts() {
+        invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal(5)),3);
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal(5)),2);
+        String printedInvoice = invoice.getAsText(invoice);
+        Assert.assertThat(printedInvoice, Matchers.containsString("Chleb szt. 2, cena: 5 PLN/szt.\nKubek szt. 3, cena: 5 PLN/szt."));
+    }
+
+    @Test
+    public void testPrintInvoiceContainsProductsQuantity() {
+        invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal(5)),3);
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal(5)),2);
+        String printedInvoice = invoice.getAsText(invoice);
+        Assert.assertThat(printedInvoice, Matchers.containsString("Liczba pozycji: 2"));
+    }
+
+    @Test
+    public void testPrintInvoiceContainsSameProductsTwice() {
+        invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal(5)),3);
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal(5)),2);
+        invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal(5)),1);
+        String printedInvoice = invoice.getAsText(invoice);
+        Assert.assertThat(printedInvoice, Matchers.containsString("nr 1\nChleb szt. 2, cena: 5 PLN/szt.\nKubek szt. 4, cena: 5 PLN/szt.\nLiczba pozycji: 2"));
+    }
 }
+
