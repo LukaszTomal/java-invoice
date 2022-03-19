@@ -1,5 +1,5 @@
 name: CI for Java Invoice
-on: [push]
+on: [ push ]
 jobs:
   test:
     name: Unit tests
@@ -11,5 +11,5 @@ jobs:
         with:
           java-version: '15'
           distribution: 'adopt'
-     - name: Test
-       run: mvn test
+      - name: Test
+        run: mvn test
