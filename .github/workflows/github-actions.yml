@@ -14,14 +14,14 @@ jobs:
       - name: Test
         run: mvn test
   check:
-   name: check style
-   runs-on: ubuntu-latest
-   steps:
-     - uses: actions/checkout@v2
-     - name: Set up JDK
-       uses: actions/setup-java@v2
-       with:
-         java-version: '15'
-         distribution: 'adopt'
-    - name: Test
-      run: mvn checkstyle:check
+    name: check style
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '15'
+          distribution: 'adopt'
+      - name: Test
+        run: mvn checkstyle:check
